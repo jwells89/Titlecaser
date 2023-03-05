@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Titlecaser",
+    platforms: [.macOS(.v13), .iOS(.v16), .watchOS(.v9), .tvOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -23,6 +24,7 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "TitlecaserTests",
-            dependencies: ["Titlecaser"]),
+            dependencies: ["Titlecaser"],
+            resources: [.copy("TestCases.json")]),
     ]
 )

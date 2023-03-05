@@ -1,0 +1,134 @@
+[
+  {
+    "original": "For step-by-step directions email someone@gmail.com",
+    "expectedResult": "For Step-by-Step Directions Email someone@gmail.com"
+  },
+  {
+    "original": "2lmc Spool: 'Gruber on OmniFocus and Vapo(u)rware'",
+    "expectedResult": "2lmc Spool: 'Gruber on OmniFocus and Vapo(u)rware'"
+  },
+  {
+    "original": "Have you read “The Lottery”?",
+    "expectedResult": "Have You Read “The Lottery”?"
+  },
+  {
+    "original": "your hair[cut] looks (nice)",
+    "expectedResult": "Your Hair[cut] Looks (Nice)"
+  },
+  {
+    "original": "People probably won't put http://foo.com/bar/ in titles",
+    "expectedResult": "People Probably Won't Put http://foo.com/bar/ in Titles"
+  },
+  {
+    "original": "Scott Moritz and TheStreet.com’s million iPhone la‑la land",
+    "expectedResult": "Scott Moritz and TheStreet.com’s Million iPhone La‑La Land"
+  },
+  {
+    "original": "BlackBerry vs. iPhone",
+    "expectedResult": "BlackBerry vs. iPhone"
+  },
+  {
+    "original": "Notes and observations regarding Apple’s announcements from ‘The Beat Goes On’ special event",
+    "expectedResult": "Notes and Observations Regarding Apple’s Announcements From ‘The Beat Goes On’ Special Event"
+  },
+  {
+    "original": "Read markdown_rules.txt to find out how _underscores around words_ will be interpretted",
+    "expectedResult": "Read markdown_rules.txt to Find Out How _Underscores Around Words_ Will Be Interpretted"
+  },
+  {
+    "original": "Q&A with Steve Jobs: 'That's what happens in technology'",
+    "expectedResult": "Q&A With Steve Jobs: 'That's What Happens in Technology'"
+  },
+  {
+    "original": "What is AT&T's problem?",
+    "expectedResult": "What Is AT&T's Problem?"
+  },
+  {
+    "original": "Apple deal with AT&T falls through",
+    "expectedResult": "Apple Deal With AT&T Falls Through"
+  },
+  {
+    "original": "this v that",
+    "expectedResult": "This v That"
+  },
+  {
+    "original": "this vs that",
+    "expectedResult": "This vs That"
+  },
+  {
+    "original": "this v. that",
+    "expectedResult": "This v. That"
+  },
+  {
+    "original": "this vs. that",
+    "expectedResult": "This vs. That"
+  },
+  {
+    "original": "The SEC's Apple probe: what you need to know",
+    "expectedResult": "The SEC's Apple Probe: What You Need to Know"
+  },
+  {
+    "original": "'by the way, small word at the start but within quotes.'",
+    "expectedResult": "'By the Way, Small Word at the Start but Within Quotes.'"
+  },
+  {
+    "original": "Small word at end is nothing to be afraid of",
+    "expectedResult": "Small Word at End Is Nothing to Be Afraid Of"
+  },
+  {
+    "original": "Starting sub-phrase with a small word: a trick, perhaps?",
+    "expectedResult": "Starting Sub-Phrase With a Small Word: A Trick, Perhaps?"
+  },
+  {
+    "original": "Sub-phrase with a small word in quotes: 'a trick, perhaps?'",
+    "expectedResult": "Sub-Phrase With a Small Word in Quotes: 'A Trick, Perhaps?'"
+  },
+  {
+    "original": "Sub-phrase with a small word in quotes: \"a trick, perhaps?\"",
+    "expectedResult": "Sub-Phrase With a Small Word in Quotes: \"A Trick, Perhaps?\""
+  },
+  {
+    "original": "\"Nothing to Be Afraid of?\"",
+    "expectedResult": "\"Nothing to Be Afraid Of?\""
+  },
+  {
+    "original": "a thing",
+    "expectedResult": "A Thing"
+  },
+  {
+    "original": "Dr. Strangelove (or: how I Learned to Stop Worrying and Love the Bomb)",
+    "expectedResult": "Dr. Strangelove (Or: How I Learned to Stop Worrying and Love the Bomb)"
+  },
+  {
+    "original": "  this is trimming",
+    "expectedResult": "This Is Trimming"
+  },
+  {
+    "original": "this is trimming  ",
+    "expectedResult": "This Is Trimming"
+  },
+  {
+    "original": "this is trimming  ",
+    "expectedResult": "This Is Trimming"
+  },
+  {
+    "original": "IF IT’S ALL CAPS, FIX IT",
+    "expectedResult": "If It’s All Caps, Fix It"
+  },
+  {
+    "original": "___if emphasized, keep that way___",
+    "expectedResult": "___If Emphasized, Keep That Way___"
+  },
+  {
+    "original": "What could/should be done about slashes?",
+    "expectedResult": "What Could/Should Be Done About Slashes?"
+  },
+  {
+    "original": "Never touch paths like /var/run before/after /boot",
+    "expectedResult": "Never Touch Paths Like /var/run Before/After /boot"
+  },
+  {
+    "original": "There are 100's of buyer's guides",
+    "expectedResult": "There Are 100's of Buyer's Guides"
+  }
+]
