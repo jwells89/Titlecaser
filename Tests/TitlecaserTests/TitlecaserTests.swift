@@ -9,7 +9,7 @@ final class TitlecaserTests: XCTestCase {
     
     let testCasesPath = Bundle.module.url(forResource: "TestCases", withExtension: "json")
     
-    func test() throws {        
+    func test() throws {
         guard let testCasesPath else { throw TestError.missingTestCasesFile }
         let testCasesData = try Data(contentsOf: testCasesPath)
         let testCases = try JSONDecoder().decode([TestCase].self, from: testCasesData)

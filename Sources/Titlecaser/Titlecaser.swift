@@ -7,17 +7,28 @@ extension String {
         let wordSeparators = CharacterSet(charactersIn: " :–—-‑")
         var nonPeriodPunctuation = CharacterSet.punctuationCharacters
         nonPeriodPunctuation.remove(charactersIn: "._-")
-        
+        let isAllCaps = allSatisfy {
+            guard $0.isLetter else { return true }
+            return $0.isUppercase
+        }
+
+        /* Swift's built-in split functions exclude separators and provide no ability to opt out,
+           so we use a custom function. */
         let words = greedySplit(with: wordSeparators)
         let recapitalized = words.enumerated().map { (index, current) in
-            if current == current.uppercased(), current.rangeOfCharacter(from: CharacterSet(charactersIn: "&")) == nil {
+            if isAllCaps, current.rangeOfCharacter(from: CharacterSet(charactersIn: "&")) == nil {
                 return String(current).naivelyCapitalized()
             }
             
+            // Check for small words
             if !current.ranges(of: smallWords).isEmpty,
+               // Skip first and last word
                index != 0,
                index != words.count - 1,
-               words[safe: index - 2] != ":"
+               words[safe: index - 2] != ":",
+               // Ignore small words that start a hyphenated phrase
+               (words[safe: index + 1] != "-" ||
+                (words[safe: index - 1] == "-" && words[index + 1] == "-"))
             {
                 return current.lowercased()
             }
@@ -33,9 +44,12 @@ extension String {
                 return String(current)
             }
             
-            // Ignore filenames and paths.
-            // When looking for periods, only include cases without other punctuation (e.g. quote marks).
-            if (current.range(of: ".") != nil && current.rangeOfCharacter(from: nonPeriodPunctuation) == nil)
+            /* Ignore filenames and paths.
+               When looking for periods, only include cases without other punctuation (e.g. quote marks),
+               and only register as filename if period isn't at end. */
+            if (current.range(of: ".") != nil
+                && current.rangeOfCharacter(from: nonPeriodPunctuation) == nil
+                && current.last != ".")
                 || current.first == "/" {
                 return String(current)
             }
@@ -81,7 +95,12 @@ extension String {
         return String(self[range])
     }
     
+    var isUppercase: Bool {
+        allSatisfy { $0.isUppercase }
+    }
+    
     func naivelyCapitalized() -> Self {
+        // Split and recurse for non-path slash usage
         if contains("/") {
             guard count > 1 else { return self }
             

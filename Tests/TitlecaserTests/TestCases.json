@@ -130,5 +130,129 @@
   {
     "original": "There are 100's of buyer's guides",
     "expectedResult": "There Are 100's of Buyer's Guides"
+  },
+  {
+    "original": "one two",
+    "expectedResult": "One Two"
+  },
+  {
+    "original": "one two three",
+    "expectedResult": "One Two Three"
+  },
+  {
+    "original": "Start a an and as at but by en for if in nor of on or per the to v vs via end",
+    "expectedResult": "Start a an and as at but by en for if in nor of on or per the to v vs via End"
+  },
+  {
+    "original": "a small word starts",
+    "expectedResult": "A Small Word Starts"
+  },
+  {
+    "original": "small word ends on",
+    "expectedResult": "Small Word Ends On"
+  },
+  {
+    "original": "questions?",
+    "expectedResult": "Questions?"
+  },
+  {
+    "original": "Two questions?",
+    "expectedResult": "Two Questions?"
+  },
+  {
+    "original": "one sentence. two sentences.",
+    "expectedResult": "One Sentence. Two Sentences."
+  },
+  {
+    "original": "we keep NASA capitalized",
+    "expectedResult": "We Keep NASA Capitalized"
+  },
+  {
+    "original": "pass camelCase through",
+    "expectedResult": "Pass camelCase Through"
+  },
+  {
+    "original": "this sub-phrase is nice",
+    "expectedResult": "This Sub-Phrase Is Nice"
+  },
+  {
+    "original": "follow step-by-step instructions",
+    "expectedResult": "Follow Step-by-Step Instructions"
+  },
+  {
+    "original": "easy as one-two-three end",
+    "expectedResult": "Easy as One-Two-Three End"
+  },
+  {
+    "original": "start on-demand end",
+    "expectedResult": "Start On-Demand End"
+  },
+  {
+    "original": "start in-or-out end",
+    "expectedResult": "Start In-or-Out End"
+  },
+  {
+    "original": "start e-commerce end",
+    "expectedResult": "Start E-Commerce End"
+  },
+  {
+    "original": "start e-mail end",
+    "expectedResult": "Start E-Mail End"
+  },
+  {
+    "original": "piña colada while you listen to ænima",
+    "expectedResult": "Piña Colada While You Listen to Ænima"
+  },
+  {
+    "original": "start title – end title",
+    "expectedResult": "Start Title – End Title"
+  },
+  {
+    "original": "start title–end title",
+    "expectedResult": "Start Title–End Title"
+  },
+  {
+    "original": "start title — end title",
+    "expectedResult": "Start Title — End Title"
+  },
+  {
+    "original": "start title—end title",
+    "expectedResult": "Start Title—End Title"
+  },
+  {
+    "original": "start title - end title",
+    "expectedResult": "Start Title - End Title"
+  },
+  {
+    "original": "email email@example.com address",
+    "expectedResult": "Email email@example.com Address"
+  },
+  {
+    "original": "you have an https://example.com/ title",
+    "expectedResult": "You Have an https://example.com/ Title"
+  },
+  {
+    "original": "_underscores around words_",
+    "expectedResult": "_Underscores Around Words_"
+  },
+  {
+    "original": "*asterisks around words*",
+    "expectedResult": "*Asterisks Around Words*"
+  },
+  {
+    "original": "this vs. that",
+    "expectedResult": "This vs. That"
+  },
+  {
+    "original": "this vs that",
+    "expectedResult": "This vs That"
+  },
+  {
+    "original": "this v. that",
+    "expectedResult": "This v. That"
+  },
+  {
+    "original": "this v that",
+    "expectedResult": "This v That"
   }
 ]
