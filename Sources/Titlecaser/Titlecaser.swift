@@ -1,7 +1,7 @@
 import Foundation
 
 extension String {
-    func toTitleCase() -> Self {
+    public func toTitleCase() -> Self {
         let smallWords = #/^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|v.?|vs.?|via)$/#.ignoresCase()
         let caps = #/[A-Z]/#
         let wordSeparators = CharacterSet(charactersIn: " :–—-‑")
