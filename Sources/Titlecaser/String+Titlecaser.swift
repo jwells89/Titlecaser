@@ -1,3 +1,10 @@
+//
+//  String+Titlecaser.swift
+//
+//
+//  Created by John Wells on 3/5/23.
+//
+
 import Foundation
 
 extension String {
@@ -89,113 +96,12 @@ extension String {
         return ranges
     }
     
-    subscript(_ i: Int) -> String? {
-        guard !isEmpty,
-              let range = index(startIndex,
-                                offsetBy: i,
-                                limitedBy: index(before: endIndex)) else { return nil }
-        
-        return String(self[range])
-    }
-    
     var isUppercase: Bool {
+        /** We invert `isLowercase` here instead of using `isUppercase`, because
+         `isUppercase` returns `false` for puncuation characters because those
+         don't have a case. This is true of `isLowercase` as well, but we can
+         take advantage of that to ignore non-letter characters when checking if
+         the string is comprised solely of capitals. */
         allSatisfy { !$0.isLowercase }
-    }
-}
-
-extension Substring {
-    var hasNonstandardCapitals: Bool {
-        // Skip first letter
-        let start = index(after: startIndex)
-        
-        return self[start..<endIndex].contains { character in
-            return character.isUppercase
-        }
-    }
-    
-    var isEmailAddress: Bool {
-        contains("@")
-    }
-    
-    var isFilename: Bool {
-        var nonPeriodPunctuation = CharacterSet.punctuationCharacters
-        nonPeriodPunctuation.remove(charactersIn: "._-")
-        
-        return contains(".")
-               && rangeOfCharacter(from: nonPeriodPunctuation) == nil
-               && last != "."
-               || first == "/"
-    }
-    
-    var isProtocol: Bool {
-        let protocols = ["http", "https", "ftp"]
-        return protocols.contains(where: { lowercased() == $0 })
-    }
-    
-    var isSmallWord: Bool {
-        let smallWords = ["a","an","and","as","at","but","by","en","for","if","in","nor",
-                          "of","on","or","per","the","to","v","vs","v.","vs.","via"]
-        
-        return smallWords.contains(where: { lowercased() == $0 })
-    }
-    
-    func naivelyCapitalized() -> Self {
-        var recomposed = self
-        
-        // Split and recurse for non-path slash usage
-        if contains("/") {
-            guard count > 1 else { return self }
-            
-            for word in split(separator: "/") {
-                recomposed.replaceSubrange(word.startIndex..<word.endIndex,
-                                           with: word.naivelyCapitalized())
-            }
-            
-            return recomposed
-        }
-        
-        var position: Substring.Index?
-        
-        while let range = rangeOfCharacter(from: .alphanumerics, range: (position ?? startIndex)..<endIndex) {
-            // First letter in the substring
-            if position == nil {
-                recomposed.replaceSubrange(range, with: self[range].uppercased())
-            } else {
-                recomposed.replaceSubrange(range, with: self[range].lowercased())
-            }
-            
-            position = range.upperBound
-        }
-        
-        return recomposed
-    }
-}
-
-extension Array {
-    subscript(safe index: Index) -> Element? {
-        indices ~= index ? self[index] : nil
-    }
-}
-
-struct TaggedRange<Bound>: RangeExpression where Bound : Comparable {
-    var range: Range<Bound>
-    var tag: Tag? = nil
-    
-    var lowerBound: Bound { range.lowerBound }
-    var upperBound: Bound { range.upperBound }
-    
-    func relative<C>(to collection: C) -> Range<Bound> where C : Collection, Bound == C.Index {
-        range.relative(to: collection)
-    }
-    
-    func contains(_ element: Bound) -> Bool {
-        range.contains(element)
-    }
-    
-    enum Tag {
-        case beginsHyphenation
-        case hyphenationComponent
-        case endsTitle
-        case beginsSubtitle
     }
 }
