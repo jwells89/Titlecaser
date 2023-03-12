@@ -154,16 +154,17 @@ extension Substring {
             return recomposed
         }
         
-        let alphanumericPattern = #/([A-Za-z0-9\u{00C0}-\u{00FF}])/#.ignoresCase()
+        var position: Substring.Index?
         
-        let matches = ranges(of: alphanumericPattern)
-        
-        for match in matches {
-            if match == matches.first {
-                recomposed.replaceSubrange(match, with: self[match].uppercased())
+        while let range = rangeOfCharacter(from: .alphanumerics, range: (position ?? startIndex)..<endIndex) {
+            // First letter in the substring
+            if position == nil {
+                recomposed.replaceSubrange(range, with: self[range].uppercased())
             } else {
-                recomposed.replaceSubrange(match, with: self[match].lowercased())
+                recomposed.replaceSubrange(range, with: self[range].lowercased())
             }
+            
+            position = range.upperBound
         }
         
         return recomposed
