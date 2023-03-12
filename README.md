@@ -5,7 +5,7 @@ This package is a quick and dirty port of John Gruber's [Title Case](https://dar
 Test cases are a mix of those [from the original project](https://github.com/ap/titlecase/blob/master/test.pl) and those of [To Title Case](https://github.com/gouch/to-title-case/blob/master/test/tests.json).
 
 ## Requirements
-Due to the newness of some of the Swift APIs being used, macOS 13.x, iOS/iPadOS 16.x, watchOS 9.x, or tvOS 16.x is required.
+Should work with any platform supported by Swift 5.7. In my own testing, it works across all current Apple platforms as well as Fedora Linux.
 
 ## Usage
 ```Swift
