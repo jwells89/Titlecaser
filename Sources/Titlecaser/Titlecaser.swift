@@ -2,88 +2,91 @@ import Foundation
 
 extension String {
     public func toTitleCase() -> Self {
-        let smallWords = #/^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|v.?|vs.?|via)$/#.ignoresCase()
-        let caps = #/[A-Z]/#
+        var capitalized = self
         let wordSeparators = CharacterSet(charactersIn: " :–—-‑")
-        var nonPeriodPunctuation = CharacterSet.punctuationCharacters
-        nonPeriodPunctuation.remove(charactersIn: "._-")
-        let isAllCaps = allSatisfy {
-            guard $0.isLetter else { return true }
-            return $0.isUppercase
-        }
+        
+        let componentRanges = componentRanges(with: wordSeparators)
+        let isAllCaps = isUppercase
 
-        /* Swift's built-in split functions exclude separators and provide no ability to opt out,
-           so we use a custom function. */
-        let words = greedySplit(with: wordSeparators)
-        let recapitalized = words.enumerated().map { (index, current) in
-            if isAllCaps, current.rangeOfCharacter(from: CharacterSet(charactersIn: "&")) == nil {
-                return String(current).naivelyCapitalized()
-            }
+        for range in componentRanges {
+            let component = self[range]
             
-            // Check for small words
-            if !current.ranges(of: smallWords).isEmpty,
-               // Skip first and last word
-               index != 0,
-               index != words.count - 1,
-               words[safe: index - 2] != ":",
-               // Ignore small words that start a hyphenated phrase
-               (words[safe: index + 1] != "-" ||
-                (words[safe: index - 1] == "-" && words[index + 1] == "-"))
-            {
-                return current.lowercased()
-            }
+            guard !component.hasNonstandardCapitals || isAllCaps,
+                  !component.isEmailAddress,
+                  !component.isFilename else { continue }
             
-            // Preserve intentional capitalization
-            let includedRange = current.index(current.startIndex, offsetBy: 1)..<current.endIndex
-            let capitalRanges = current[includedRange].ranges(of: caps)
-            if !capitalRanges.isEmpty {
-                return String(current)
-            }
+            let shouldLowercase = range.lowerBound != startIndex
+                                && range.upperBound != endIndex
+                                && range.tag != .beginsSubtitle
+                                && range.tag != .beginsHyphenation
+                                && (component.isProtocol || component.isSmallWord)
             
-            if current.contains("@") {
-                return String(current)
+            if shouldLowercase {
+                capitalized.replaceSubrange(range, with: component.lowercased())
+            } else {
+                capitalized.replaceSubrange(range, with: component.naivelyCapitalized())
             }
-            
-            /* Ignore filenames and paths.
-               When looking for periods, only include cases without other punctuation (e.g. quote marks),
-               and only register as filename if period isn't at end. */
-            if (current.range(of: ".") != nil
-                && current.rangeOfCharacter(from: nonPeriodPunctuation) == nil
-                && current.last != ".")
-                || current.first == "/" {
-                return String(current)
-            }
-            
-            // Ignore URLs
-            if words[safe: index + 1] == ":",
-               words[safe: index + 2]?.hasPrefix("//") == true {
-                return String(current)
-            }
-            
-            return String(current).naivelyCapitalized()
         }
         
-        return recapitalized.joined().trimmingCharacters(in: .whitespacesAndNewlines)
+        return capitalized.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-    func greedySplit(with separators: CharacterSet) -> [Substring] {
-        var components = [Substring]()
+    func componentRanges(with separators: CharacterSet) -> [TaggedRange<Index>] {
+        var ranges = [TaggedRange<Index>]()
         var position = startIndex
         
+        var subtitleMayStart = false
+        var hyphenationMayEnd = false
+        
         while let range = rangeOfCharacter(from: separators, range: position..<endIndex) {
+            // Most components
             if range.lowerBound != position {
-                components.append(self[position..<range.lowerBound])
+                let newRange = position..<range.lowerBound
+                var tag: TaggedRange<Index>.Tag?
+                
+                if subtitleMayStart {
+                    tag = .beginsSubtitle
+                    subtitleMayStart = false
+                }
+                
+                ranges.append(TaggedRange(range: newRange, tag: tag))
             }
             
-            components.append(self[range])
+            // Most separator characters
+            switch self[range] {
+            case ":":
+                guard let previousRange = ranges.last,
+                      !self[previousRange].isProtocol else { break }
+                
+                subtitleMayStart = true
+                
+            case "-":
+                if var modifiedLast = ranges.last {
+                    if hyphenationMayEnd {
+                        modifiedLast.tag = .hyphenationComponent
+                        hyphenationMayEnd = false
+                    } else {
+                        modifiedLast.tag = .beginsHyphenation
+                        hyphenationMayEnd = true
+                    }
+                    
+                    ranges.removeLast()
+                    ranges.append(modifiedLast)
+                }
+                
+            default: break
+            }
+            
+            ranges.append(TaggedRange(range: range))
             position = range.upperBound
         }
         
+        // Last word
         if position != endIndex {
-            components.append(self[position..<endIndex])
+            ranges.append(TaggedRange(range: position..<endIndex))
         }
         
-        return components
+        return ranges
     }
     
     subscript(_ i: Int) -> String? {
@@ -96,23 +99,65 @@ extension String {
     }
     
     var isUppercase: Bool {
-        allSatisfy { $0.isUppercase }
+        allSatisfy { !$0.isLowercase }
+    }
+}
+
+extension Substring {
+    var hasNonstandardCapitals: Bool {
+        // Skip first letter
+        let start = index(after: startIndex)
+        
+        return self[start..<endIndex].contains { character in
+            return character.isUppercase
+        }
+    }
+    
+    var isEmailAddress: Bool {
+        contains("@")
+    }
+    
+    var isFilename: Bool {
+        var nonPeriodPunctuation = CharacterSet.punctuationCharacters
+        nonPeriodPunctuation.remove(charactersIn: "._-")
+        
+        return contains(".")
+               && rangeOfCharacter(from: nonPeriodPunctuation) == nil
+               && last != "."
+               || first == "/"
+    }
+    
+    var isProtocol: Bool {
+        let protocols = ["http", "https", "ftp"]
+        return protocols.contains(where: { lowercased() == $0 })
+    }
+    
+    var isSmallWord: Bool {
+        let smallWords = ["a","an","and","as","at","but","by","en","for","if","in","nor",
+                          "of","on","or","per","the","to","v","vs","v.","vs.","via"]
+        
+        return smallWords.contains(where: { lowercased() == $0 })
     }
     
     func naivelyCapitalized() -> Self {
+        var recomposed = self
+        
         // Split and recurse for non-path slash usage
         if contains("/") {
             guard count > 1 else { return self }
             
-            return greedySplit(with: CharacterSet(charactersIn: "/")).map {
-                String($0).naivelyCapitalized()
-            }.joined()
+            for word in split(separator: "/") {
+                recomposed.replaceSubrange(word.startIndex..<word.endIndex,
+                                           with: word.naivelyCapitalized())
+            }
+            
+            return recomposed
         }
         
         let alphanumericPattern = #/([A-Za-z0-9\u{00C0}-\u{00FF}])/#.ignoresCase()
         
         let matches = ranges(of: alphanumericPattern)
-        var recomposed = self
+        
         for match in matches {
             if match == matches.first {
                 recomposed.replaceSubrange(match, with: self[match].uppercased())
@@ -128,5 +173,28 @@ extension String {
 extension Array {
     subscript(safe index: Index) -> Element? {
         indices ~= index ? self[index] : nil
+    }
+}
+
+struct TaggedRange<Bound>: RangeExpression where Bound : Comparable {
+    var range: Range<Bound>
+    var tag: Tag? = nil
+    
+    var lowerBound: Bound { range.lowerBound }
+    var upperBound: Bound { range.upperBound }
+    
+    func relative<C>(to collection: C) -> Range<Bound> where C : Collection, Bound == C.Index {
+        range.relative(to: collection)
+    }
+    
+    func contains(_ element: Bound) -> Bool {
+        range.contains(element)
+    }
+    
+    enum Tag {
+        case beginsHyphenation
+        case hyphenationComponent
+        case endsTitle
+        case beginsSubtitle
     }
 }
